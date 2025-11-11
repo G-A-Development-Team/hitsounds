@@ -104,7 +104,7 @@ if LOADED_HITSOUNDS_SCRIPT then
  
  local function EnumerateFiles()
      local ffd = ffi.new("WIN32_FIND_DATAA", 1)
-     local handle = libc.FindFirstFileA(hitsounds_path .. "\\gadev_hitsound01.wav", ffd)
+     local handle = libc.FindFirstFileA(hitsounds_path .. "\\default_*.wav", ffd)
  
      assert(handle ~= ffi.cast("void*", -1), "Failed to open directory: " .. hitsounds_path)
  
@@ -123,6 +123,9 @@ if LOADED_HITSOUNDS_SCRIPT then
  
  GetDirectory()
  EnumerateFiles()
+
+local helper = gui.Reference( "WORLD", "Helper" )
+local volume = gui.Slider( helper, "gadev_hs_volume", "Hitsound Volume",  100, 1, 100, 1 )
  
  client.AllowListener("player_hurt")
  callbacks.Register("FireGameEvent", "HitSoundsEvent", function(event)
@@ -133,7 +136,7 @@ if LOADED_HITSOUNDS_SCRIPT then
              local attacker_index = entities.GetByIndex(event:GetInt("attacker") + 1):GetFieldEntity("m_hPawn"):GetIndex()
  
              if local_index == attacker_index and local_index ~= victim_index then
-                 PlaySound(string.format("%s\\%s", hitsounds_path, hitsounds_list[1]))
+                 PlaySound( string.format( "%s\\%s", hitsounds_path, "default_" ..gui.GetValue( "world.gadev_hs_volume" ) ) )
              end
          end
      end
@@ -144,5 +147,6 @@ if LOADED_HITSOUNDS_SCRIPT then
      callbacks.Unregister( "FireGameEvent", "HitSoundsEvent" )
  
  end )
+
  
-print( "[Hitsounds] Hitsounds v0.1 has been fully loaded! Made By: Agentsix1 & Carter Poe" )
+print( "[Hitsounds] Hitsounds v0.2 has been fully loaded! Made By: Agentsix1 & Carter Poe" )

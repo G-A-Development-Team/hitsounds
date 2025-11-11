@@ -1,6 +1,15 @@
 {
   "weeks": [
     {
+      "week": "11-11-2025",
+      "title": "Adding Volume",
+      "author": "Agentsix1 : 316884",
+      "items": [
+        "Added ability to change the volume for hitsounds.",
+        "Made steps to easily add custom sounds in the future",
+      ]
+    },
+    {
       "week": "11-10-2025",
       "title": "[CS2 V6] Return Hitsounds",
       "author": "Agentsix1 : 316884",

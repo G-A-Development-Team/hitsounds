@@ -145,3 +145,4 @@ if LOADED_HITSOUNDS_SCRIPT then
  
  end )
  
+print( "[Hitsounds] Hitsounds v0.1 has been fully loaded! Made By: Agentsix1 & Carter Poe" )

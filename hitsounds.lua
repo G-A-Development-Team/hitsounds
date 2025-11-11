@@ -48,14 +48,14 @@ local function GetDirectory()
 
     local path = ffi.string(buf)
     path = string.gsub(path, "game\\bin\\win64\\cs2.exe", "")
-    path = path .. "hitsounds"
+    path = path .. "gadev_sounds"
 
     hitsounds_path = path
 end
 
 local function EnumerateFiles()
     local ffd = ffi.new("WIN32_FIND_DATAA", 1)
-    local handle = libc.FindFirstFileA(hitsounds_path .. "\\*.wav", ffd)
+    local handle = libc.FindFirstFileA(hitsounds_path .. "\\gadev_hitsound01.wav", ffd)
 
     assert(handle ~= ffi.cast("void*", -1), "Failed to open directory: " .. hitsounds_path)
 

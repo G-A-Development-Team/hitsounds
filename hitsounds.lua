@@ -1,5 +1,6 @@
 -- Checking to ensure this script cant be reloaded after its already loaded!
 if LOADED_HITSOUNDS_SCRIPT then
+    print( "[Hitsounds] Unable to load Hitsounds. Please click 'Save Lua Permissions' and try again." )
     return 
  end
  LOADED_HITSOUNDS_SCRIPT = true
@@ -102,6 +103,7 @@ if LOADED_HITSOUNDS_SCRIPT then
      hitsounds_path = path
  end
  
+ --
  local function EnumerateFiles()
      local ffd = ffi.new("WIN32_FIND_DATAA", 1)
      local handle = libc.FindFirstFileA(hitsounds_path .. "\\default_*.wav", ffd)
@@ -120,12 +122,37 @@ if LOADED_HITSOUNDS_SCRIPT then
  local function PlaySound(path)
      winmm.PlaySoundA(path, nil, libc.SND_ASYNC)
  end
+
+ local function EnumerateFolders()
+    local ffd = ffi.new("WIN32_FIND_DATAA", 1)
+    local handle = libc.FindFirstFileA(hitsounds_path .. "\\*", ffd)
+
+    assert(handle ~= ffi.cast("void*", -1), "Failed to open directory: " .. hitsounds_path)
+
+    repeat
+        local name = ffi.string(ffd.cFileName)
+
+        if name ~= "." and name ~= ".." then
+            if bit.band(ffd.dwFileAttributes, libc.FILE_ATTRIBUTE_DIRECTORY) ~= 0 then
+                table.insert(hitsounds_list, name)
+            end
+        end
+    until libc.FindNextFileA(handle, ffd) == 0
+
+    libc.FindClose(handle)
+end
  
  GetDirectory()
- EnumerateFiles()
+ EnumerateFolders()
 
 local helper = gui.Reference( "WORLD", "Helper" )
 local volume = gui.Slider( helper, "gadev_hs_volume", "Hitsound Volume",  100, 1, 100, 1 )
+local sound = gui.Combobox( helper, "gadev_hs_sound", "Hitsound Sound", unpack( hitsounds_list ) )
+local preview = gui.Button( helper, "Preview Sound", function()
+    local hssound = hitsounds_list[ gui.GetValue( "world.gadev_hs_sound" ) + 1]
+    local hsvolume = gui.GetValue( "world.gadev_hs_volume" )
+    PlaySound( string.format( "%s\\%s", hitsounds_path, hssound .. "\\" .. hssound .. "_" .. hsvolume ) )
+end )
  
  client.AllowListener("player_hurt")
  callbacks.Register("FireGameEvent", "HitSoundsEvent", function(event)
@@ -136,7 +163,9 @@ local volume = gui.Slider( helper, "gadev_hs_volume", "Hitsound Volume",  100, 1
              local attacker_index = entities.GetByIndex(event:GetInt("attacker") + 1):GetFieldEntity("m_hPawn"):GetIndex()
  
              if local_index == attacker_index and local_index ~= victim_index then
-                 PlaySound( string.format( "%s\\%s", hitsounds_path, "default_" ..gui.GetValue( "world.gadev_hs_volume" ) ) )
+                local hssound = hitsounds_list[ gui.GetValue( "world.gadev_hs_sound" ) + 1]
+                local hsvolume = gui.GetValue( "world.gadev_hs_volume" )
+                PlaySound( string.format( "%s\\%s", hitsounds_path, hssound .. "\\" .. hssound .. "_" .. hsvolume ) )
              end
          end
      end
@@ -147,6 +176,5 @@ local volume = gui.Slider( helper, "gadev_hs_volume", "Hitsound Volume",  100, 1
      callbacks.Unregister( "FireGameEvent", "HitSoundsEvent" )
  
  end )
-
  
-print( "[Hitsounds] Hitsounds v0.2 has been fully loaded! Made By: Agentsix1 & Carter Poe" )
+print( "[Hitsounds] Hitsounds v0.3 has been fully loaded! Made By: Agentsix1 & Carter Poe" )

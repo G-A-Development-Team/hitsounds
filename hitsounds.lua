@@ -8,4 +8,6 @@ Coming soon we are releasing something no one has ever seen. Leagues above Aimwa
 
 Next month would've marked 10 years on Aimware for me. It's quite unfortunate it had to end this way for no reason.
 
+
+Join Our Discord for all of the old scripts and updates on our project
 https://discord.gg/SmVg9AKqNs
